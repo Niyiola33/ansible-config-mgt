@@ -1,0 +1,10 @@
+---
+- name: Common server setup
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: present
+
