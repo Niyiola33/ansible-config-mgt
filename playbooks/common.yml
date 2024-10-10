@@ -1,0 +1,70 @@
+---
+- name: Common server setup
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: present
+
+
+---
+# Play 1: Updates for web, nfs, and db servers (RHEL-based)
+- name: update web, nfs, and db servers
+  hosts: webservers, nfs, db
+  become: yes
+  tasks:
+    - name: ensure wireshark is at the latest version
+      yum:
+        name: wireshark
+        state: latest
+
+    - name: create a directory and a file inside it
+      file:
+        path: /tmp/my_directory
+        state: directory
+        mode: '0755'
+
+    - name: create a file inside the directory
+      copy:
+        dest: /tmp/my_directory/my_file.txt
+        content: "This is a sample file."
+
+    - name: change timezone to UTC
+      command: timedatectl set-timezone UTC
+
+    - name: run a shell script
+      shell: /path/to/your/script.sh
+
+# Play 2: Updates for LB server (Ubuntu-based)
+- name: update LB server
+  hosts: lb
+  become: yes
+  tasks:
+    - name: Update apt repo
+      apt:
+        update_cache: yes
+
+    - name: ensure wireshark is at the latest version
+      apt:
+        name: wireshark
+        state: latest
+
+    - name: create a directory and a file inside it
+      file:
+        path: /tmp/my_directory
+        state: directory
+        mode: '0755'
+
+    - name: create a file inside the directory
+      copy:
+        dest: /tmp/my_directory/my_file.txt
+        content: "This is a sample file."
+
+    - name: change timezone to UTC
+      command: timedatectl set-timezone UTC
+
+    - name: run a shell script
+      shell: /path/to/your/script.sh
+
